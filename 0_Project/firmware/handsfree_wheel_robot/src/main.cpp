@@ -1,4 +1,4 @@
-/***********************************************************************************************************************
+﻿/***********************************************************************************************************************
 * Copyright (c) Hands Free Team. All rights reserved.
 * FileName: main.c
 * Contact:  QQ Exchange Group -- 521037187
@@ -29,17 +29,23 @@ int main(void)
     RobotModel robot_model;
     RobotAbstract robot;
     robot.para = robot_model;
+
     RobotControl *robot_control_p = RobotControl::getInstance();
     robot_control_p->init(&robot);
 
-    HFLink hf_link_pc_node(&robot , 0x11 , 0x01 , (unsigned char)USART_PC);
+   HFLink hf_link_pc_node(&robot , 0x11 , 0x01 , (unsigned char)USART_PC);
     robot_control_p->setHFLinkNodePointer(&hf_link_pc_node);
-    SBUS sbus(USART_SBUS);
-    robot_control_p->setSBUSRemotePointer(&sbus);
 
-    printf("app start \r\n");
 
-    while(1)
+//  SBUS sbus(USART_SBUS);
+//  robot_control_p->setSBUSRemotePointer(&sbus);
+    
+
+    printf("   aap start1  \n");
+    printf("   aap start2  \n");
+//  while(1);
+//  board->setBeepState(0);
+        while(1)
     {
 
         if(board->usartDeviceReadData(robot_control_p->hf_link_node_device)->emptyCheck() == 0){
@@ -51,6 +57,7 @@ int main(void)
         {
             board->cnt_1ms=0;
             // imu.topCall();
+
         }
         if ( board->cnt_2ms >= 2 )      // 500hz
         {
@@ -68,15 +75,21 @@ int main(void)
         if ( board->cnt_20ms >= 20 )    // 50hz
         {
             board->cnt_20ms = 0 ;
-            robot_control_p->motor_top.motorTopCall(); //motor speed control
+
+
         }
         if ( board->cnt_50ms >= 50 )    // 20hz
         {
             board->cnt_50ms = 0 ;
-            robot_control_p->call();
+           robot_control_p->call();
             board->setLedState(0,2);
+            robot_control_p->motor_top.motorTopCall(); //motor speed control
+         //   robot_control_p->motor_top.motorTest();
+
         }
+
     }
+
 
     return 0;
 }

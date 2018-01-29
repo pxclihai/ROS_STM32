@@ -179,6 +179,7 @@ void EXTI0_IRQHandler(void)
     if( GPIO_ReadInputDataBit(GPIO_PWM_IN_CHANNEL0 , GPIO_Pin_0) )   //if( GPIOB->IDR & 0x0001)
     {    //if rising
         RisingTime = HF_Get_System_Time(); //get time of rising T1
+          PWM_Input_CH[0]++;
     }
     else
     {    //if falling
@@ -186,7 +187,7 @@ void EXTI0_IRQHandler(void)
         if(FallingTime < RisingTime){return ; } //over time and return
         else
         {
-            PWM_Input_CH[0] = FallingTime - RisingTime; //T2-T1
+            //PWM_Input_CH[0] = FallingTime - RisingTime; //T2-T1
             //ppm.PPM_IRQ(PWM_Input_CH[0]);
         }
     }

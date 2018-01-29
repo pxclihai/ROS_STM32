@@ -61,7 +61,8 @@ void MotorControl::pidOrdinaryCall(float outside_expect , float outside_measure
     if(i_flag == 1 && (inside_expect > 1 || inside_expect < -1) ){
         pid_data.i_error_i += parameter.pid.i2*pid_data.i_error_now * pid_t;
     }
-    else  pid_data.i_error_i = 0;
+    else
+        pid_data.i_error_i = 0;
     pid_data.i_error_i = dataLimit( pid_data.i_error_i , pwm_range) ;
     pid_data.i_error_d = parameter.pid.d2*(pid_data.i_error_now-pid_data.i_error_last) * (1/pid_t);
     //pid_data.i_error_d = parameter.pid.d2*(pid_data.i_error_now-2*pid_data.i_error_last+pid_data.i_error_before_last) * (1/pid_t);
@@ -137,20 +138,22 @@ void MotorControl::pidSeriesCall(float outside_expect , float outside_measure ,
 ***********************************************************************************************************************/
 void MotorControl::speedControlCall(void)
 {
+
     control_data.expect_angle_speed = (1 - parameter.speed_low_filter) * control_data.measure_angle_speed +
             parameter.speed_low_filter * expect_angle_speed;
-    control_data.measure_unit_encoder =  getEncoderdata(parameter.motor_id);
+    control_data.measure_unit_encoder =  getEncoderdata(parameter.motor_id);//
 
     //expect unit encoder num in one cycle to pid
-    control_data.expect_unit_encoder = ( control_data.expect_angle_speed / 360 ) * parameter.encoder_num * pid_t;
-    control_data.expect_total_encoder += control_data.expect_unit_encoder ;   //recording total encoder
+    control_data.expect_unit_encoder    = ( control_data.expect_angle_speed  ) * parameter.encoder_num * pid_t *100 ;///   /360
+   // printf("num:%f \n",parameter.encoder_num);
+    control_data.expect_total_encoder  += control_data.expect_unit_encoder  ;   //recording total encoder
     control_data.measure_total_encoder += control_data.measure_unit_encoder ;
     //recording total angle for robot coordinate calculation
-    control_data.d_past_angle += (control_data.measure_unit_encoder/parameter.encoder_num)*360;
-    control_data.past_total_angle+= (control_data.measure_unit_encoder/parameter.encoder_num)*360;
+    control_data.d_past_angle    += (control_data.measure_unit_encoder/parameter.encoder_num); //*360
+    control_data.past_total_angle+= (control_data.measure_unit_encoder/parameter.encoder_num);//*360
 
     //calc motor speed  degree/s
-    control_data.measure_angle_speed  = control_data.measure_unit_encoder * 360 / ( parameter.encoder_num*pid_t );
+    control_data.measure_angle_speed  = control_data.measure_unit_encoder  / ( parameter.encoder_num * pid_t *100);//*360
 
     //motor speed pid control function
     pidOrdinaryCall(control_data.expect_total_encoder , control_data.measure_total_encoder
@@ -171,8 +174,20 @@ void MotorControl::speedControlCall(void)
     else if(control_enable_flag == 0){
         control_data.pwm_output = 0;
     }
+    static int j =0;
+    j++;
+    if(j >= 10)
+    {
+        j = 0;
+//        printf("control_data.expect_angle_speed = %f   ||  control_data.pwm_output %f\r\n",
+//               control_data.expect_unit_encoder ,pid_data.i_pidout);
+    }
+  //  IOEnable(parameter.motor_id);
+    //control_data.pwm_output = 1000;
+   // control_data.pwm_output = 10;
+   setPWM( parameter.motor_id , control_data.pwm_output);
 
-    setPWM(parameter.motor_id , control_data.pwm_output );
-
+ //  printf("pwm_out----%f\n",control_data.pwm_output);
+ //  printf("pwm_out----%d\n",(int)control_data.pwm_output);
 }
 

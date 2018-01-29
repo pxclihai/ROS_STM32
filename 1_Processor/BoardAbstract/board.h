@@ -2,7 +2,40 @@
 #define	BOARD_H
 
 #include "board_abstract.h"
+//#define DEBUG_ERR_CONSOLE_ON
+#ifdef DEBUG_ERR_CONSOLE_ON
+#define MSG_ERR(num, str, val)      \
+        printf("%04x  ",num);\
+        printf(str);\
+        printf("  %x",val);\
+        printf("\n");
+#else
+#define MSG_ERR(num, str, val)
+#endif
 
+/// Definition of MSG_WAR
+// ----------------------
+//#define DEBUG_WAR_CONSOLE_ON
+#ifdef DEBUG_WAR_CONSOLE_ON
+#define MSG_WAR(num, str, val)   \
+        printf("%04x  ",num);\
+        printf(str);\
+        printf("  %x",val);\
+        printf("\n");
+#else
+#define MSG_WAR(num, str, val)
+#endif
+
+#define MSG_USER_ON
+#ifdef  MSG_USER_ON
+#define MSG_USER(num, str, val)   \
+        printf("%04x  ",num);\
+        printf(str);\
+        printf("  %d",val);\
+        printf("\n\r");
+#else
+#define MSG_USER(num, str, val)
+#endif
 class Board : public BoardAbstract
 {
 
@@ -14,6 +47,7 @@ public:
     {
        static Board instance;
        return &instance;
+
     }
 
     /*****system support functions*********************************************************************************************/

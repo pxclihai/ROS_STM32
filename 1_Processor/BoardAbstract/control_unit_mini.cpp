@@ -15,7 +15,6 @@
 ***********************************************************************************************************************/
 
 #include "board.h"
-
 Board::Board() : BoardAbstract()
 {
     battery_voltage_alarm_ = 10.50 ;
@@ -57,7 +56,7 @@ Board::Board() : BoardAbstract()
     else if(PC_INTERFACE == 3){
         device_type[USART_PC] = 0x30;
     }
-    if(PC_INTERFACE == 4){
+    else if(PC_INTERFACE == 4){
         device_type[USART_PC] = 0x40;
     }
     else if(PC_INTERFACE == 5){
@@ -129,27 +128,27 @@ void Board::ledInit(void)
     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_Out_PP;
     GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;
 
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA , ENABLE);
-    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_2;
-    GPIO_Init(GPIOA , &GPIO_InitStruct);
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB , ENABLE);
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_5;
+    GPIO_Init(GPIOB , &GPIO_InitStruct);
 
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC , ENABLE);
-    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_13 | GPIO_Pin_14;
-    GPIO_Init(GPIOC , &GPIO_InitStruct);
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_5 | GPIO_Pin_14;
+    GPIO_Init(GPIOE , &GPIO_InitStruct);
 }
 
 void Board::setLedState(uint8_t led_id, uint8_t operation)
 {
     if ( led_id == 0){
-        if(operation == 0) { GPIO_SetBits(GPIOA , GPIO_Pin_2);}
-        else if(operation == 1) { GPIO_ResetBits(GPIOA , GPIO_Pin_2);}
-        else if(operation == 2){GPIO_ToggleBits(GPIOA , GPIO_Pin_2);}
+        if(operation == 0) { GPIO_SetBits(GPIOB , GPIO_Pin_5);}
+        else if(operation == 1) { GPIO_ResetBits(GPIOB , GPIO_Pin_5);}
+        else if(operation == 2){GPIO_ToggleBits(GPIOB , GPIO_Pin_5);}
     }
 
     if ( led_id == 1){
-        if(operation == 0) { GPIO_SetBits(GPIOC , GPIO_Pin_13);}
-        else if(operation == 1) { GPIO_ResetBits(GPIOC , GPIO_Pin_13);}
-        else if(operation == 2) { GPIO_ToggleBits(GPIOC , GPIO_Pin_13);}
+        if(operation == 0) { GPIO_SetBits(GPIOE , GPIO_Pin_5);}
+        else if(operation == 1) { GPIO_ResetBits(GPIOE , GPIO_Pin_5);}
+        else if(operation == 2) { GPIO_ToggleBits(GPIOE , GPIO_Pin_5);}
     }
 
     if ( led_id == 2){
@@ -162,18 +161,18 @@ void Board::setLedState(uint8_t led_id, uint8_t operation)
 void Board::beepInit(void)
 {
     GPIO_InitTypeDef  GPIO_InitStruct;
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA , ENABLE);
-    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_12 ;
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB , ENABLE);
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_8 ;
     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_Out_PP;
     GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;
-    GPIO_Init(GPIOA , &GPIO_InitStruct);
+    GPIO_Init(GPIOB , &GPIO_InitStruct);
 }
 
 void Board::setBeepState(uint8_t operation)
 {
-    if(operation == 0) { GPIO_ResetBits(GPIOA , GPIO_Pin_12);}
-    else if(operation == 1) { GPIO_SetBits(GPIOA , GPIO_Pin_12);}
-    else if(operation == 2) { GPIO_SetBits(GPIOA , GPIO_Pin_12);}
+    if(operation == 0) { GPIO_ResetBits(GPIOB , GPIO_Pin_8);}
+    else if(operation == 1) { GPIO_SetBits(GPIOB , GPIO_Pin_8);}
+    else if(operation == 2) { GPIO_SetBits(GPIOB , GPIO_Pin_8);}
 }
 
 void Board::keyInit(void)
@@ -205,8 +204,12 @@ void Board::keyStateRenew(void)
 void Board::motorInterfaceInit(uint8_t mode , uint8_t motor_id , float motor_pwm_t)
 {
     GPIO_InitTypeDef  GPIO_InitStructure;
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+    GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_Out_PP;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    printf("motor_id= %d \n",motor_id);
+     //LIdar_motor
+     HF_PWMChannel_Init(TIM5 , 1 , 719 , 5000  , 0);
+     HF_Set_PWM(TIM5 , 1 ,  4100);
 
     if(mode == 0)
     {
@@ -220,9 +223,12 @@ void Board::motorInterfaceInit(uint8_t mode , uint8_t motor_id , float motor_pwm
             GPIO_Init(GPIOB , &GPIO_InitStructure);
             GPIO_ResetBits(GPIOB , GPIO_Pin_0);
             GPIO_ResetBits(GPIOB , GPIO_Pin_1);//Stop the motor.
-            HF_Encoder_Init(TIM4,0);   //encoder init for PID speed control
+
+            HF_PwmCount_Init(0);
+
+           // HF_Encoder_Init(TIM4,0);   //encoder init for PID speed control
             // motor_pwm_t = 5000 , TIM1 motor pwm frequency  = (72M) / motor_pwm_t  = 14.4K
-            HF_PWMChannel_Init(TIM1 , 1 , 0 , motor_pwm_t  , 0);
+            HF_PWMChannel_Init(TIM1 , 1 , 719 , motor_pwm_t  , 0);
         }
         else if(motor_id == 2){
             RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC , ENABLE);
@@ -230,8 +236,9 @@ void Board::motorInterfaceInit(uint8_t mode , uint8_t motor_id , float motor_pwm
             GPIO_Init(GPIOC , &GPIO_InitStructure);
             GPIO_ResetBits(GPIOC , GPIO_Pin_5);
             GPIO_ResetBits(GPIOC , GPIO_Pin_4);//Stop the motor.
-            HF_Encoder_Init(TIM2,1);
-            HF_PWMChannel_Init(TIM1 , 2 , 0 , motor_pwm_t  , 0);
+           // HF_Encoder_Init(TIM2,1);
+          //  HF_PWMChannel_Init(TIM1 , 2 , 7199 , motor_pwm_t  , 0);
+             HF_PWMChannel_Init(TIM1 , 4 , 719 , motor_pwm_t  , 0);
         }
         else if(motor_id == 3){
             RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC , ENABLE);
@@ -240,7 +247,7 @@ void Board::motorInterfaceInit(uint8_t mode , uint8_t motor_id , float motor_pwm
             GPIO_ResetBits(GPIOC , GPIO_Pin_7);
             GPIO_ResetBits(GPIOC , GPIO_Pin_6);//Stop the motor.
             HF_Encoder_Init(TIM3,0);
-            HF_PWMChannel_Init(TIM1 , 3 , 0 , motor_pwm_t  , 0);
+            HF_PWMChannel_Init(TIM1 , 3 , 719 , motor_pwm_t  , 0);
         }
         else if(motor_id == 4){
             RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC , ENABLE);
@@ -249,7 +256,7 @@ void Board::motorInterfaceInit(uint8_t mode , uint8_t motor_id , float motor_pwm
             GPIO_ResetBits(GPIOC, GPIO_Pin_8);
             GPIO_ResetBits(GPIOC , GPIO_Pin_9);//Stop the motor.
             HF_Encoder_Init(TIM5,0);
-            HF_PWMChannel_Init(TIM1 , 4 , 0 , motor_pwm_t  , 0);
+            HF_PWMChannel_Init(TIM1 , 4 , 719 , motor_pwm_t  , 0);
         }
     }
 }
@@ -339,6 +346,7 @@ void Board::motorSetPWM(uint8_t mode , uint8_t motor_id , int pwm_value)
                 GPIO_ResetBits(GPIOB , GPIO_Pin_0);
                 GPIO_SetBits(GPIOB , GPIO_Pin_1);
                 HF_Set_PWM(TIM1 , 1 , (uint16_t)pwm_value);
+
                 return;
             }
             else if(pwm_value < -5){
@@ -356,16 +364,19 @@ void Board::motorSetPWM(uint8_t mode , uint8_t motor_id , int pwm_value)
             if( pwm_value > 5) {
                 GPIO_ResetBits(GPIOC , GPIO_Pin_5);
                 GPIO_SetBits(GPIOC , GPIO_Pin_4);
-                HF_Set_PWM(TIM1 , 2 , (uint16_t)pwm_value);
+                // HF_Set_PWM(TIM1 , 2 , (uint16_t)pwm_value); //pxc
+                HF_Set_PWM(TIM1 , 4 , (uint16_t)pwm_value);
                 return;
             }
             else if(pwm_value < -5){
                 GPIO_SetBits(GPIOC , GPIO_Pin_5);
                 GPIO_ResetBits(GPIOC , GPIO_Pin_4);
-                HF_Set_PWM(TIM1 , 2 , (uint16_t)-pwm_value);
+                //HF_Set_PWM(TIM1 , 2 , (uint16_t)-pwm_value);
+                HF_Set_PWM(TIM1 , 4 , (uint16_t)-pwm_value);
                 return;
             }
             else{
+                //motorDisable(1,2);
                 motorDisable(1,2);
                 return;
             }
@@ -428,10 +439,10 @@ void Board::motorSetPWM(uint8_t mode , uint8_t motor_id , int pwm_value)
 float Board::getMotorEncoderCNT(uint8_t motor_id)
 {
     if(motor_id == 1 ){
-        return HF_Get_Encode_TIM4();
+        return HF_Get_Encode_TIM3();
     }
     else if(motor_id == 2){
-        return HF_Get_Encode_TIM2();
+        return HF_Get_Encode_TIM4();
     }
     else if(motor_id == 3){
         return HF_Get_Encode_TIM3();

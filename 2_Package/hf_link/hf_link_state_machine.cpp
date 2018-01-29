@@ -31,6 +31,7 @@ unsigned char StateMachine::receiveStates(const unsigned char rx_data)
             receive_message_length_ = 0;
             byte_count_=0;
             receive_check_sum_ += rx_data;
+
         }
         break;
 
@@ -39,6 +40,7 @@ unsigned char StateMachine::receiveStates(const unsigned char rx_data)
         {
             receive_state_ = SENDER_ID;
             receive_check_sum_ += rx_data;
+
         }
         else
             receive_state_ = WAITING_FF1;

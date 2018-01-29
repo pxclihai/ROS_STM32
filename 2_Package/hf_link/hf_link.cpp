@@ -25,10 +25,12 @@ unsigned char HFLink::byteAnalysisCall(const unsigned char rx_byte)
     if( receiveStates(rx_byte) )
     {
         //receive a new message
+
         unsigned char package_update = packageAnalysis();
         if(package_update == 1) analysis_package_count++;
         return package_update;
     }
+  //ss  sendStruct(SHAKING_HANDS  , NULL , 0);
     return 0;
 }
 
@@ -57,17 +59,18 @@ unsigned char HFLink::packageAnalysis(void)
 
     command_state_ = (Command)rx_message.data[0];
 
+
     if (hf_link_node_model == 0)  //the slave need to check the SHAKING_HANDS"s state
     {
         if(shaking_hands_state==0 && command_state_ != SHAKING_HANDS) //if not  shaking hands
         {
             sendStruct(SHAKING_HANDS  , NULL , 0);
+
             return 1;
         }
     }
 
     unsigned char analysis_state =0;
-
     switch (command_state_)
     {
     case SHAKING_HANDS :
@@ -111,6 +114,7 @@ unsigned char HFLink::packageAnalysis(void)
         break;
 
     case SET_GLOBAL_SPEED :
+     //   printf("global x=%d , y=%d z=%d \n",robot->expect_global_speed.x,robot->expect_global_speed.y,robot->expect_global_speed.z);
         analysis_state=setCommandAnalysis(command_state_ , (unsigned char *)&robot->expect_global_speed , sizeof(robot->expect_global_speed));
         break;
 
@@ -119,6 +123,7 @@ unsigned char HFLink::packageAnalysis(void)
         break;
 
     case SET_ROBOT_SPEED :
+       //    printf(" x=%f , y=%f z=%f \n",robot->expect_robot_speed.x,robot->expect_robot_speed.y,robot->expect_robot_speed.z);
         analysis_state=setCommandAnalysis(command_state_ , (unsigned char *)&robot->expect_robot_speed , sizeof(robot->expect_robot_speed));
         break;
 
@@ -127,6 +132,7 @@ unsigned char HFLink::packageAnalysis(void)
         break;
 
     case SET_MOTOR_SPEED :
+       //    printf("robot->expect_motor_speed=%d \n",robot->expect_motor_speed);
         analysis_state=setCommandAnalysis(command_state_ , (unsigned char *)&robot->expect_motor_speed, sizeof(robot->expect_motor_speed));
         break;
 

@@ -18,7 +18,7 @@ BoardAbstract::BoardAbstract()
     board_call_5ms = board_call_20ms = board_call_1s = board_call_2s =  0 ;
 
     device_type[USART_DEBUG] = 0x10;
-    device_type[USART_PC] = 0x10;
+    device_type[USART_PC] = 0x20;
     device_type[USART_RADIO] = 0x40;
     device_type[USART_GPS] = 0x32;
     device_type[USART_SBUS] = 0x21;
@@ -63,6 +63,7 @@ void BoardAbstract::boardBasicInit(void)
 
     systemClockInit();
     debugInterfaceInit();
+    
 
     ledInit();
     keyInit();
@@ -75,7 +76,10 @@ void BoardAbstract::boardBasicInit(void)
 
     setBeepState(1);
     delay_ms(500);
-    setBeepState(0);
+    setBeepState(1);
+
+  //  debugPutChar('X');
+  // while(1);
 }
 
 /***********************************************************************************************************************
@@ -171,6 +175,7 @@ void BoardAbstract::usartDeviceInit(DeviceType usart_device_type ,  uint32_t bau
     device_channel = getByteHighFourBit(device_type[usart_device_type]);
     device_mapping = getByteLowFourBit(device_type[usart_device_type]);
 
+    printf("evice_type[usart_device_type]=%d",device_type[USART_PC]);
     if(usart_device_type == USART_DEBUG){
         if(baudrate == 0) baudrate=921600;
     }

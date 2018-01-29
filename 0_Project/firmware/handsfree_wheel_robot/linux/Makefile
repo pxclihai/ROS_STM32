@@ -1,9 +1,9 @@
 ######################################define project name, board type, and path
 
 #####BOARD_TYPE: control_unit_mini control_unit_v2
-BOARD_TYPE		?= control_unit_v2
+BOARD_TYPE	?= control_unit_mini
 #####ROBOT_MODEL : null stone stone_omni3 giraffe   
-ROBOT_MODEL     ?= stone
+ROBOT_MODEL     ?= mini
 #####project name
 PROJECT			=  robot_$(ROBOT_MODEL)_$(BOARD_TYPE)
 TOP_PATH        =  ../../../..

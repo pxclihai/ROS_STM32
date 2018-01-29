@@ -8,7 +8,7 @@
 ifeq "$(strip $(BOARD_TYPE))" "control_unit_v1"
 
 DDEFS           += -DCONTROL_UNIT_V1 -DSTM32F4XX 
-DDEFS           += -DHSE_VALUE=25000000 -DUSE_STDPERIPH_DRIVER 
+DDEFS           += -DHSE_VALUE=8000000 -DUSE_STDPERIPH_DRIVER 
 MCU             ?= cortex-m4  
 CPU_TYPE        ?= STM32F4
 BOARD_ABSTRACT  ?= $(TOP_PATH)/1_Processor/BoardAbstract/control_unit_v1.cpp
@@ -25,7 +25,7 @@ endif
 ifeq "$(strip $(BOARD_TYPE))" "control_unit_v2"
 
 DDEFS           += -DCONTROL_UNIT_V2 -DSTM32F4XX 
-DDEFS           += -DHSE_VALUE=8000000 -DUSE_STDPERIPH_DRIVER 
+DDEFS           += -DHSE_VALUE=25000000 -DUSE_STDPERIPH_DRIVER 
 MCU             ?= cortex-m4  
 CPU_TYPE        ?= STM32F4
 BOARD_ABSTRACT  += $(TOP_PATH)/1_Processor/BoardAbstract/control_unit_v2.cpp

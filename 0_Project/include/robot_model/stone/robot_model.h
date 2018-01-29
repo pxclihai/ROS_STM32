@@ -29,8 +29,8 @@ public:
         strcpy(robot_description ,  "this is a differential robot of handsfree");
 
         motor_para.motor_id = 0;
-        motor_para.driver_type = MotorDriver_PWM12_AND_IO;
-        motor_para.encoder_num  = 1560 ;
+        motor_para.driver_type = MotorDriver_PWM_AND_IOAB;
+        motor_para.encoder_num  = 20 ;
         motor_para.pwm_max = 5000;
         motor_para.pwm_dead_zone = 10;
         motor_para.speed_low_filter = 0.3;

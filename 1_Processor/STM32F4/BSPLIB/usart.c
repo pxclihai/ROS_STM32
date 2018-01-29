@@ -43,7 +43,7 @@ void HF_USART_Init(uint8_t USART_Channel , uint32_t BaudRate , uint8_t GPIO_AF)
     GPIO_InitTypeDef GPIO_InitStructure;
     USART_InitTypeDef USART_InitStructure;
     GPIO_StructInit(&GPIO_InitStructure);
-    
+
     if(USART_Channel == 1){
         USARTx = USART1;
     }
@@ -202,7 +202,7 @@ void HF_USART_Init(uint8_t USART_Channel , uint32_t BaudRate , uint8_t GPIO_AF)
     USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
     USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
     USART_Init(USARTx, &USART_InitStructure);
-    
+
     USART_ITConfig(USARTx, USART_IT_RXNE, ENABLE); //enable interrupt
     USART_ClearITPendingBit(USARTx, USART_IT_RXNE);
     USART_Cmd(USARTx, ENABLE);                     //enable usart

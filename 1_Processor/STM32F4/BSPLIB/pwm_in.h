@@ -14,12 +14,12 @@ extern "C" {
 
 //pwm in channel 1
 #define  RCC_PWM_IN_CHANNEL1        RCC_AHB1Periph_GPIOC
-#define  GPIO_PWM_IN_CHANNEL1      GPIOC
+#define  GPIO_PWM_IN_CHANNEL1       GPIOC
 #define  EXTI_PWM_IN_CHANNEL1        EXTI_PortSourceGPIOC
 
 //pwm in channel 2
 #define  RCC_PWM_IN_CHANNEL2        RCC_AHB1Periph_GPIOC
-#define  GPIO_PWM_IN_CHANNEL2      GPIOC
+#define  GPIO_PWM_IN_CHANNEL2       GPIOC
 #define  EXTI_PWM_IN_CHANNEL2        EXTI_PortSourceGPIOC
 
 //pwm in channel 3
@@ -34,7 +34,7 @@ extern "C" {
 
 //pwmin_channel = 0,1,2,3,4
 //PC0 PC1 PC2 PC3 PC4  external interrupt
-void HF_PWMIN_Init(uint8_t pwmin_channel);
+void  HF_PWMIN_Init(uint8_t pwmin_channel);
 float HF_Get_PWM_Value(uint8_t channel_x); //current input value of PWM (Unit:us)
 
 #ifdef __cplusplus

@@ -207,7 +207,8 @@ HEADERS += 0_Project/examples/handsfree_simple_app/src/main_config.h \
 		3_OS/STM32F1/RTOS/uCOS-III/uCOS-III/Source/os_type.h \
 		3_OS/STM32F1/RTOS/uCOS-III/uC-CPU/ARM-Cortex-M3/GNU/cpu.h \
 		3_OS/STM32F1/RTOS/uCOS-III/uCOS-III/Ports/ARM-Cortex-M3/Generic/GNU/os_cpu.h \
-		4_Thirdparty/libs_include.h
+		4_Thirdparty/libs_include.h \
+    1_Processor/STM32F1/BSPLIB/pwm_count.h
 
 
 SOURCES += 0_Project/examples/handsfree_simple_app/src/main.cpp \
@@ -344,3 +345,5 @@ SOURCES += 0_Project/examples/handsfree_simple_app/src/main.cpp \
 		3_OS/STM32F1/RTOS/uCOS-III/uCOS-III/Source/os_var.c \
 		3_OS/STM32F1/RTOS/uCOS-III/uC-CPU/ARM-Cortex-M3/GNU/cpu_c.c \
 		3_OS/STM32F1/RTOS/uCOS-III/uCOS-III/Ports/ARM-Cortex-M3/Generic/GNU/os_cpu_c.c \
+    1_Processor/STM32F1/BSPLIB/pwm_count.cpp \
+    1_Processor/STM32F1/BSPLIB/pwm_count.c

@@ -12,7 +12,7 @@ public:
         strcpy(robot_description ,  "this is a omni3 template parameters");
 
         motor_para.motor_id = 0;
-        motor_para.driver_type = MotorDriver_PWM12_AND_IO;
+        motor_para.driver_type = MotorDriver_PWM_AND_IOAB;
         motor_para.encoder_num  = 28000 ;
         motor_para.pwm_max = 5000;
         motor_para.pwm_dead_zone = 10;

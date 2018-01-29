@@ -114,19 +114,17 @@ void MotorTop::motorTest(void)
     i++;
     j++;
 
-    if(i <= 250)
+    if(i <= 150)
     {
-        motor1.setAngleSpeed(1000);
-        motor2.setAngleSpeed(1000);
-        motor3.setAngleSpeed(1000);
-        motor4.setAngleSpeed(1000);
+        motor1.setAngleSpeed(10);
+        motor2.setAngleSpeed(10);
+
     }
-    else if (i > 250 && i < 500)
+    else if (i > 150 && i < 300)
     {
-        motor1.setAngleSpeed(-1000);
-        motor2.setAngleSpeed(-1000);
-        motor3.setAngleSpeed(-1000);
-        motor4.setAngleSpeed(-1000);
+        motor1.setAngleSpeed(-10);
+        motor2.setAngleSpeed(-10);
+
     }
     else i = 0;
 
@@ -136,6 +134,8 @@ void MotorTop::motorTest(void)
         printf("measure motor speed:  motor1=%.4f  motor2=%.4f  motor3=%.4f  motor4=%.4f \r\n",
                motor1.getControlData()->measure_angle_speed , motor2.getControlData()->measure_angle_speed,
                motor3.getControlData()->measure_angle_speed , motor4.getControlData()->measure_angle_speed);
+     //   printf("motor_pwm_num3 %d \n", TIM3->CNT);
+      //  printf("motor_pwm_num4 %d \n", TIM4->CNT);
     }
 }
 

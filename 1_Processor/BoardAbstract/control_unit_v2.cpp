@@ -130,13 +130,16 @@ void Board::ledInit(void)
     GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
     GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_UP;
 
-    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE,ENABLE);
-    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_0|GPIO_Pin_2|GPIO_Pin_3 ;
-    GPIO_Init(GPIOE , &GPIO_InitStruct);
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD,ENABLE);
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_12|GPIO_Pin_13|GPIO_Pin_14 ;
+        GPIO_ResetBits(GPIOD , GPIO_Pin_12);
+	GPIO_ResetBits(GPIOD , GPIO_Pin_13);
+	GPIO_ResetBits(GPIOD , GPIO_Pin_14);
 
-    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC,ENABLE);
-    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_13;
-    GPIO_Init(GPIOC , &GPIO_InitStruct);
+
+    GPIO_Init(GPIOD , &GPIO_InitStruct);
+
+
 }
 
 void Board::setLedState(uint8_t led_id, uint8_t operation){
@@ -169,16 +172,16 @@ void Board::beepInit(void)
     GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
     GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
     GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_UP;
-    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE,ENABLE);
-    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_1 ;
-    GPIO_Init(GPIOE , &GPIO_InitStruct);
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD,ENABLE);
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_15 ;
+    GPIO_Init(GPIOD , &GPIO_InitStruct);
 }
 
 void Board::setBeepState(uint8_t operation)
 {
-    if(operation == 0) { GPIO_ResetBits(GPIOE , GPIO_Pin_1);  }
-    else if(operation == 1) { GPIO_SetBits(GPIOE , GPIO_Pin_1); }
-    else if(operation == 2) { GPIO_ToggleBits(GPIOE , GPIO_Pin_1); }
+    if(operation == 0) { GPIO_ResetBits(GPIOD , GPIO_Pin_15);  }
+    else if(operation == 1) { GPIO_SetBits(GPIOD , GPIO_Pin_15); }
+    else if(operation == 2) { GPIO_ToggleBits(GPIOD , GPIO_Pin_15); }
 }
 
 void Board::keyInit(void)
@@ -209,105 +212,72 @@ void Board::keyStateRenew(void)
 ***********************************************************************************************************************/
 void Board::motorInterfaceInit(uint8_t mode , uint8_t motor_id , float motor_pwm_t)
 {
+
+
     GPIO_InitTypeDef  GPIO_InitStructure;
-    GPIO_StructInit(&GPIO_InitStructure);
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
     GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
-    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;
+
+    MSG_USER(0x1001,"motor_InterfaceInit_",mode);
 
     if(mode == 0)
     {
-        if(motor_id == 1 ){
-            RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE , ENABLE);
-            GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8;
-            GPIO_Init(GPIOE , &GPIO_InitStructure);
-            GPIO_ResetBits(GPIOE , GPIO_Pin_8);
-            HF_Encoder_Init(TIM2,1);   //encoder init for PID speed control
-            //motor_pwm_t = 5000 , TIM1 motor pwm frequency  = (168M/2) / motor_pwm_t  = 16.8K
-            HF_PWMChannel_Init(TIM1 , 1 , 2-1 , motor_pwm_t , 1);
-            HF_PWMChannel_Init(TIM1 , 2 , 2-1 , motor_pwm_t , 1);
-        }
-        else if(motor_id == 2){
-            RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE , ENABLE);
-            GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12 ;
-            GPIO_Init(GPIOE , &GPIO_InitStructure);
-            GPIO_ResetBits(GPIOE , GPIO_Pin_12);
-            HF_Encoder_Init(TIM3,1);
-            //motor_pwm_t = 5000 , TIM1 motor pwm frequency  = (168M/2) / motor_pwm_t  = 16.8K
-            HF_PWMChannel_Init(TIM1 , 3 , 2-1 , motor_pwm_t , 1);
-            HF_PWMChannel_Init(TIM1 , 4 , 2-1 , motor_pwm_t , 1);
-        }
-        else if(motor_id == 3){
-            RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE , ENABLE);
-            GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4;
-            GPIO_Init(GPIOE , &GPIO_InitStructure);
-            GPIO_ResetBits(GPIOE , GPIO_Pin_4);
-            HF_Encoder_Init(TIM4,1);
-            //motor_pwm_t = 5000 , TIM9 motor pwm frequency  = (168M/2) / motor_pwm_t = 16.8K
-            HF_PWMChannel_Init(TIM9 , 1 , 2-1 , motor_pwm_t , 0);
-            HF_PWMChannel_Init(TIM9 , 2 , 2-1 , motor_pwm_t , 0);
-        }
-        else if(motor_id == 4){
-            RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE , ENABLE);
-            GPIO_InitStructure.GPIO_Pin = GPIO_Pin_15;
-            GPIO_Init(GPIOE , &GPIO_InitStructure);
-            GPIO_ResetBits(GPIOE , GPIO_Pin_15);
-            HF_Encoder_Init(TIM5,0);
-            //motor_pwm_t = 5000 , TIM12 motor pwm frequency = (84M) / motor_pwm_t  = 16.8K
-            HF_PWMChannel_Init(TIM12 , 1 , 0 , motor_pwm_t , 0);
-            HF_PWMChannel_Init(TIM12 , 2 , 0 , motor_pwm_t , 0);
-        }
+       MSG_USER(0x1002,"motor_InterfaceInit_motor_mode =",mode);
     }
-    else if (mode == 1)
+    else if(mode == 1)
     {
+
+       MSG_USER(0x1003,"motor_InterfaceInit_motor_mode =", mode);
+
         if(motor_id == 1 ){
-            RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE , ENABLE);
-            GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8 | GPIO_Pin_11;
-            GPIO_Init(GPIOE , &GPIO_InitStructure);
-            GPIO_ResetBits(GPIOE , GPIO_Pin_8);
-            GPIO_ResetBits(GPIOE , GPIO_Pin_11);
-            HF_Encoder_Init(TIM2,1);   //encoder init for PID speed control
-            //motor_pwm_t = 5000 , TIM1 motor pwm frequency  = (168M/2) / motor_pwm_t  = 16.8K
-            HF_PWMChannel_Init(TIM1 , 1 , 2-1 , motor_pwm_t , 1);
+            RCC_APB1PeriphClockCmd(RCC_AHB1Periph_GPIOB , ENABLE);
+            GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0|GPIO_Pin_1;
+            GPIO_Init     (GPIOB , &GPIO_InitStructure);
+            GPIO_ResetBits(GPIOB , GPIO_Pin_0);
+            GPIO_ResetBits(GPIOB , GPIO_Pin_1);
+       //Stop the motor.
+            HF_Encoder_Init(TIM4,0);
+       //encoder init for PID speed control
+       //motor_pwm_t = 5000 , TIM1 motor pwm frequency  = (72M) / motor_pwm_t  = 14.4K
+            HF_PWMChannel_Init(TIM1 , 1 , 1 , motor_pwm_t  , 1);
         }
+
         else if(motor_id == 2){
-            RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE , ENABLE);
-            GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12 | GPIO_Pin_14 ;
-            GPIO_Init(GPIOE , &GPIO_InitStructure);
-            GPIO_ResetBits(GPIOE , GPIO_Pin_12);
-            GPIO_ResetBits(GPIOE , GPIO_Pin_14);
-            HF_Encoder_Init(TIM3,1);
-            //motor_pwm_t = 5000 , TIM1 motor pwm frequency  = (168M/2) / motor_pwm_t  = 16.8K
-            HF_PWMChannel_Init(TIM1 , 3 , 2-1 , motor_pwm_t , 1);
+            RCC_APB1PeriphClockCmd(RCC_AHB1Periph_GPIOC , ENABLE);
+            GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5| GPIO_Pin_4;
+            GPIO_Init(GPIOC , &GPIO_InitStructure);
+            GPIO_ResetBits(GPIOC , GPIO_Pin_5);
+            GPIO_ResetBits(GPIOC , GPIO_Pin_4);//Stop the motor.
+            HF_Encoder_Init(TIM2,1);
+            HF_PWMChannel_Init(TIM1 , 2 , 1 , motor_pwm_t  , 1);
         }
         else if(motor_id == 3){
-            RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE , ENABLE);
-            GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_6;
-            GPIO_Init(GPIOE , &GPIO_InitStructure);
-            GPIO_ResetBits(GPIOE , GPIO_Pin_4);
-            GPIO_ResetBits(GPIOE, GPIO_Pin_6);
-            HF_Encoder_Init(TIM4,1);
-            //motor_pwm_t = 5000 , TIM9 motor pwm frequency  = (168M/2) / motor_pwm_t = 16.8K
-            HF_PWMChannel_Init(TIM9 , 1 , 2-1 , motor_pwm_t , 0);
+            RCC_APB1PeriphClockCmd(RCC_AHB1Periph_GPIOC , ENABLE);
+            GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6| GPIO_Pin_7;
+            GPIO_Init(GPIOC , &GPIO_InitStructure);
+            GPIO_ResetBits(GPIOC , GPIO_Pin_7);
+            GPIO_ResetBits(GPIOC , GPIO_Pin_6);//Stop the motor.
+            HF_Encoder_Init(TIM3,0);
+            HF_PWMChannel_Init(TIM1 , 3 , 1 , motor_pwm_t  , 1);
         }
         else if(motor_id == 4){
-            RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE , ENABLE);
-            GPIO_InitStructure.GPIO_Pin = GPIO_Pin_15;
-            GPIO_Init(GPIOE , &GPIO_InitStructure);
-            GPIO_ResetBits(GPIOE , GPIO_Pin_15);
-            RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB , ENABLE);
-            GPIO_InitStructure.GPIO_Pin = GPIO_Pin_15;
-            GPIO_Init(GPIOB , &GPIO_InitStructure);
-            GPIO_ResetBits(GPIOB , GPIO_Pin_15);
+            RCC_APB1PeriphClockCmd(RCC_AHB1Periph_GPIOC , ENABLE);
+            GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8| GPIO_Pin_9;
+            GPIO_Init(GPIOC , &GPIO_InitStructure);
+            GPIO_ResetBits(GPIOC, GPIO_Pin_8);
+            GPIO_ResetBits(GPIOC , GPIO_Pin_9);//Stop the motor.
             HF_Encoder_Init(TIM5,0);
-            //motor_pwm_t = 5000 , TIM12 motor pwm frequency = (84M) / motor_pwm_t  = 16.8K
-            HF_PWMChannel_Init(TIM12 , 1 , 0 , motor_pwm_t , 0);
+            HF_PWMChannel_Init(TIM1 , 4 , 1 , motor_pwm_t  , 1);
         }
     }
+    else
+    {
+
+    }
+
 
 }
-
 
 /***********************************************************************************************************************
 * Function:
@@ -590,19 +560,23 @@ float Board::getMotorCurrent(uint8_t motor_id)
     float motor_current;
 
     if(motor_id == 1 ){
-        motor_current = 2.94f * HF_Get_ADC_Output(2);
+      //motor_current = 2.94f * HF_Get_ADC_Output(2);
+        motor_current =100;
         return motor_current;
     }
     else if(motor_id == 2){
-        motor_current = 2.94f * HF_Get_ADC_Output(3);
+      //  motor_current = 2.94f * HF_Get_ADC_Output(3);
+        motor_current =100;
         return motor_current;
     }
     else if(motor_id == 3){
-        motor_current = 2.94f * HF_Get_ADC_Output(4);
+      //  motor_current = 2.94f * HF_Get_ADC_Output(4);
+          motor_current =100;
         return motor_current;
     }
     else if(motor_id == 4){
-        motor_current = 2.94f * HF_Get_ADC_Output(5);
+      //  motor_current = 2.94f * HF_Get_ADC_Output(5);
+          motor_current =100;
         return motor_current;
     }
     return 0;

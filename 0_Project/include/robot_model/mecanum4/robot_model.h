@@ -12,7 +12,7 @@ public:
         strcpy(robot_description ,  "this is a mecanum4 template parameters");
 
         motor_para.motor_id = 0;
-        motor_para.driver_type = MotorDriver_PWM12_AND_IO;
+        motor_para.driver_type = MotorDriver_PWM_AND_IOAB;
         motor_para.encoder_num  = 28000 ;
         motor_para.pwm_max = 5000;
         motor_para.pwm_dead_zone = 10;
@@ -24,7 +24,7 @@ public:
         chassis_para.wheel_radius = 0.0320;
         chassis_para.body_radius = 0.1592;
         chassis_para.speed_low_filter = 0.4;
-        chassis_para.motor_pid_t = 0.02;
+        chassis_para.motor_pid_t = 0.05;
         chassis_para.dof = 4;
         chassis_para.simulation_model = 0;
         chassis_para.imu_fusion_enalbe = 0;

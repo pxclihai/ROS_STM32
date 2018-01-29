@@ -36,6 +36,9 @@
 #include "BSPLIB/timer.h"
 #include "BSPLIB/pwm_in.h"
 #include "BSPLIB/pwm_out.h"
+
+#include "BSPLIB/pwm_count.h"
+
 #include "BSPLIB/encoder.h"
 #include "BSPLIB/i2c.h"
 #include "BSPLIB/can.h"

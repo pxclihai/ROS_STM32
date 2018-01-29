@@ -83,7 +83,7 @@ public:
     }
     void debugInterfaceInit(void)
     {
-        usartDeviceInit(USART_DEBUG , 921600);  //debug USART init
+        usartDeviceInit(USART_DEBUG , 115200);  //debug USART init921600
     }
     void debugPutChar(uint8_t tx_byte)
     {

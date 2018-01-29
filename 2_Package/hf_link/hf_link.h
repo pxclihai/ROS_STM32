@@ -46,7 +46,7 @@ public:
         //enable hflink ack , generally, master disable and slave enable
         //and slave also can disable to reduce communication burden
         hf_link_ack_en = 0;
-        if(hf_link_node_model == 0) hf_link_ack_en = 1;
+        if( hf_link_node_model == 0 ) hf_link_ack_en = 1;
 
         robot=robot_;
         shaking_hands_state = 0;

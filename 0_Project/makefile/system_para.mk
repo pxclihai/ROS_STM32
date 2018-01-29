@@ -20,11 +20,11 @@ endif
 
 ifeq "$(strip $(BOARD_TYPE))" "control_unit_mini"
 ####select the usartx for board debug info printf : usart_interface_x,usb_slave  
-DEBUG_PRINTF_INTERFACE ?= usart_interface_4
+DEBUG_PRINTF_INTERFACE ?= usart_interface_2
 ####select the usartxfor pc communications (hf_link) : usart_interface_x,usb_slave 
-PC_INTERFACE ?= usart_interface_4
+PC_INTERFACE ?=           usart_interface_2
 ####select the usartx for remote control (hf_link) : usart_interface_x  
-RADIO_INTERFACE ?= usart_interface_5
+RADIO_INTERFACE ?=        usart_interface_5
 endif
 
 ifeq "$(strip $(ROBOT_SIMULATION_MODE))" "enable"

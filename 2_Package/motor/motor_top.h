@@ -8,11 +8,12 @@
 class DCMotor : public MotorControl
 {
 public:
-    DCMotor(MotorDriverType motor_driver_type_ = MotorDriver_PWM12_AND_IO , uint8_t motor_simulation_model_ = 0)
+    DCMotor(MotorDriverType motor_driver_type_ = MotorDriver_PWM_AND_IOAB , uint8_t motor_simulation_model_ = 0)
     {
         motor_driver_type = motor_driver_type_;
         motor_simulation_model = motor_simulation_model_;
         board = Board::getInstance();
+       
     }
     void setSimulationModel(uint8_t motor_simulation_model_ ){
         motor_simulation_model =  motor_simulation_model_ ;
@@ -21,6 +22,7 @@ public:
 public:
     void interfaceInit(unsigned char motor_id_  , float pwm_max){
         if(motor_simulation_model == 0){
+            
             board->motorInterfaceInit((uint8_t)motor_driver_type , motor_id_ , pwm_max);
         }
         else{
