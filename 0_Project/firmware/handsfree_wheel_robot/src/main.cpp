@@ -75,16 +75,14 @@ int main(void)
         if ( board->cnt_20ms >= 20 )    // 50hz
         {
             board->cnt_20ms = 0 ;
-
-
         }
         if ( board->cnt_50ms >= 50 )    // 20hz
         {
             board->cnt_50ms = 0 ;
-           robot_control_p->call();
+          //  robot_control_p->call();
             board->setLedState(0,2);
             robot_control_p->motor_top.motorTopCall(); //motor speed control
-         //   robot_control_p->motor_top.motorTest();
+            robot_control_p->motor_top.motorTest();
 
         }
 
